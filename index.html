@@ -433,7 +433,7 @@
             <label for="event-location">Ubicación:</label>
             <input type="text" id="event-location" required />
           </div>
-          <div class="form-group">
+          <div class="form-group" id="genre-group">
             <label for="event-genre">Género Musical:</label>
             <select id="event-genre">
               <option value="">Seleccionar género</option>
@@ -443,6 +443,16 @@
               <option value="folclore">Folclore</option>
               <option value="tango">Tango</option>
             </select>
+          </div>
+          <div class="form-group">
+            <label for="event-image">Imagen del Evento:</label>
+            <input
+              type="url"
+              id="event-image"
+              required
+              placeholder="URL de la imagen del evento"
+            />
+            <small>Ingresa la URL de una imagen para el evento</small>
           </div>
           <div class="form-group">
             <label for="event-description">Descripción:</label>
@@ -503,7 +513,7 @@
             <label for="edit-event-location">Ubicación:</label>
             <input type="text" id="edit-event-location" required />
           </div>
-          <div class="form-group">
+          <div class="form-group" id="genre-group">
             <label for="edit-event-genre">Género Musical:</label>
             <select id="edit-event-genre">
               <option value="">Seleccionar género</option>
@@ -652,6 +662,16 @@
               <option value="equipos">Equipos</option>
               <option value="entretenimiento">Entretenimiento</option>
             </select>
+          </div>
+          <div class="form-group">
+            <label for="benefit-image">Imagen del Beneficio:</label>
+            <input
+              type="url"
+              id="benefit-image"
+              required
+              placeholder="URL de la imagen del beneficio"
+            />
+            <small>Ingresa la URL de una imagen para el beneficio</small>
           </div>
           <button type="submit" class="btn-primary">Crear Beneficio</button>
         </form>

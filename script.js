@@ -51,6 +51,7 @@ const mockData = {
       id: 1,
       title: "Nuevo Concierto de Rock Nacional",
       type: "evento",
+      eventType: "concierto",
       date: "2025-09-17",
       location: "Buenos Aires",
       genre: "rock",
@@ -71,6 +72,7 @@ const mockData = {
       id: 3,
       title: "Festival de Jazz en Rosario",
       type: "evento",
+      eventType: "concierto",
       date: "2024-03-01",
       location: "Rosario",
       genre: "jazz",
@@ -81,6 +83,7 @@ const mockData = {
       id: 4,
       title: "Taller de Composición Musical",
       type: "evento",
+      eventType: "taller",
       date: "2024-02-20",
       location: "Mendoza",
       genre: "clasica",
@@ -101,6 +104,7 @@ const mockData = {
       id: 6,
       title: "Concierto de Música Folclórica",
       type: "evento",
+      eventType: "concierto",
       date: "2024-03-15",
       location: "Córdoba",
       genre: "folclore",
@@ -130,7 +134,7 @@ const mockData = {
       type: "reunion",
       date: "2026-02-20T18:00",
       location: "Sede Central, Buenos Aires",
-      genre: "general",
+      genre: "",
       description: "Reunión mensual para tratar temas importantes.",
       attendees: 80,
       favorites: 12,
@@ -158,7 +162,7 @@ const mockData = {
       type: "marcha",
       date: "2024-01-15T16:00",
       location: "Plaza de Mayo, Buenos Aires",
-      genre: "general",
+      genre: "",
       description: "Marcha pacífica por mejores condiciones laborales.",
       attendees: 300,
       favorites: 89,
@@ -245,6 +249,28 @@ const mockData = {
 
   // Lista de géneros musicales disponibles
   genres: ["Rock", "Jazz", "Clásica", "Folclore", "Tango", "Pop", "Electrónica", "Hip Hop", "Reggae", "Metal"],
+}
+
+// Función para obtener el ícono según el tipo de evento
+function getEventTypeIcon(eventType) {
+  const icons = {
+    concierto: "fas fa-music",
+    reunion: "fas fa-users",
+    marcha: "fas fa-fist-raised",
+    taller: "fas fa-chalkboard-teacher",
+  }
+  return icons[eventType] || "fas fa-calendar"
+}
+
+// Función para obtener el nombre legible del tipo de evento
+function getEventTypeName(eventType) {
+  const names = {
+    concierto: "Concierto",
+    reunion: "Reunión",
+    marcha: "Marcha",
+    taller: "Taller",
+  }
+  return names[eventType] || "Evento"
 }
 
 // Inicialización
@@ -547,27 +573,20 @@ function loadNovedades() {
     const card = document.createElement("div")
     card.className = "news-card"
 
-    // Asignar imagen según el género si no tiene una específica
-    if (!item.image && item.genre) {
-      item.image = mockData.genreImages[item.genre.toLowerCase()] || mockData.genreImages.general
-    } else if (!item.image) {
-      item.image = mockData.genreImages.general
+    // Usar la imagen del item directamente, sin fallbacks automáticos
+    if (item.image) {
+      card.classList.add("news-card-with-bg")
+
+      const bgImage = document.createElement("img")
+      bgImage.src = item.image
+      bgImage.className = "news-card-bg"
+      bgImage.alt = ""
+      card.appendChild(bgImage)
+
+      const overlay = document.createElement("div")
+      overlay.className = "card-overlay"
+      card.appendChild(overlay)
     }
-
-    // Si tiene imagen, añadir clase para fondo
-    card.classList.add("news-card-with-bg")
-
-    // Añadir imagen de fondo
-    const bgImage = document.createElement("img")
-    bgImage.src = item.image
-    bgImage.className = "news-card-bg"
-    bgImage.alt = ""
-    card.appendChild(bgImage)
-
-    // Añadir overlay para mejorar legibilidad
-    const overlay = document.createElement("div")
-    overlay.className = "card-overlay"
-    card.appendChild(overlay)
 
     // Añadir corazón para favoritos si es un evento y el usuario es afiliado
     if (item.type === "evento" && currentUser && currentUser.type === "afiliado") {
@@ -585,18 +604,34 @@ function loadNovedades() {
       }
     }
 
+    // Construir la información meta según el tipo
+    let metaInfo = `<span><i class="fas fa-calendar"></i> ${formatDate(item.date)}</span>`
+    metaInfo += `<span><i class="fas fa-map-marker-alt"></i> ${item.location}</span>`
+
+    // Solo mostrar género si es un evento de tipo concierto y tiene género
+    if (item.type === "evento" && item.eventType === "concierto" && item.genre) {
+      metaInfo += `<span><i class="fas fa-music"></i> ${item.genre}</span>`
+    }
+
+    // Determinar el tipo de badge
+    let badgeText = "Beneficio"
+    let badgeClass = "badge-benefit"
+
+    if (item.type === "evento") {
+      badgeText = getEventTypeName(item.eventType || "evento")
+      badgeClass = "badge-event"
+    }
+
     card.innerHTML += `
             <div class="card-content">
                 <h3>${item.title}</h3>
                 <div class="meta">
-                    <span><i class="fas fa-calendar"></i> ${formatDate(item.date)}</span>
-                    <span><i class="fas fa-map-marker-alt"></i> ${item.location}</span>
-                    <span><i class="fas fa-music"></i> ${item.genre}</span>
+                     ${metaInfo}
                 </div>
                 <p>${item.description}</p>
                 <div style="margin-top: 1rem;">
-                    <span class="badge ${item.type === "evento" ? "badge-event" : "badge-benefit"}">
-                        ${item.type === "evento" ? "Evento" : "Beneficio"}
+                    <span class="badge ${badgeClass}">
+                        ${badgeText}
                     </span>
                 </div>
             </div>
@@ -753,6 +788,16 @@ function showEventDetails(eventId) {
   document.getElementById("event-detail-date").textContent = formatDateTime(event.date)
   document.getElementById("event-detail-location").textContent = event.location
   document.getElementById("event-detail-genre").textContent = event.genre
+
+  // Solo mostrar género si es concierto y tiene género
+  const genreElement = document.getElementById("event-detail-genre")
+  if (event.type === "concierto" && event.genre) {
+    genreElement.textContent = event.genre
+    genreElement.parentElement.style.display = "block"
+  } else {
+    genreElement.parentElement.style.display = "none"
+  }
+
   document.getElementById("event-detail-description").textContent = event.description
 
   // Ya no necesitamos mostrar la imagen separada
@@ -817,13 +862,11 @@ function loadEvents() {
     const eventCard = document.createElement("div")
     eventCard.className = "event-card"
 
-    // Añadir imagen de fondo
-    if (!event.image && event.genre) {
-      event.image = mockData.genreImages[event.genre.toLowerCase()] || mockData.genreImages.general
+    // Usar solo la imagen del evento si existe
+    if (event.image) {
+      eventCard.style.backgroundImage = `url('${event.image}')`
+      eventCard.classList.add("with-bg-image")
     }
-
-    eventCard.style.backgroundImage = `url('${event.image}')`
-    eventCard.classList.add("with-bg-image")
 
     let actionsHTML = ""
     if (currentUser) {
@@ -858,15 +901,24 @@ function loadEvents() {
       }
     }
 
+    // Construir información del evento según el tipo
+    let eventInfo = `
+      <h4>${event.title}</h4>
+      <p><i class="fas fa-calendar"></i> ${formatDateTime(event.date)}</p>
+      <p><i class="fas fa-map-marker-alt"></i> ${event.location}</p>
+    `
+
+    // Solo mostrar género si es concierto y tiene género
+    if (event.type === "concierto" && event.genre) {
+      eventInfo += `<p><i class="fas fa-music"></i> ${event.genre}</p>`
+    }
+
     eventCard.innerHTML = `
       <div class="card-overlay"></div>
       <div class="event-content">
         <div class="event-header">
           <div>
-            <h4>${event.title}</h4>
-            <p><i class="fas fa-calendar"></i> ${formatDateTime(event.date)}</p>
-            <p><i class="fas fa-map-marker-alt"></i> ${event.location}</p>
-            <p><i class="fas fa-music"></i> ${event.genre}</p>
+            ${eventInfo}
           </div>
           ${actionsHTML}
         </div>
@@ -927,19 +979,20 @@ function toggleAttendance(eventId) {
 function handleCreateEvent(e) {
   e.preventDefault()
 
-  const genre = document.getElementById("event-genre").value || "general"
+  const eventType = document.getElementById("event-type").value
+  const genre = eventType === "concierto" ? document.getElementById("event-genre").value : ""
 
   const newEvent = {
     id: mockData.events.length + 1,
     title: document.getElementById("event-title").value,
-    type: document.getElementById("event-type").value,
+    type: eventType,
     date: document.getElementById("event-date").value,
     location: document.getElementById("event-location").value,
     genre: genre,
     description: document.getElementById("event-description").value,
     attendees: 0,
     favorites: 0,
-    image: mockData.genreImages[genre.toLowerCase()] || mockData.genreImages.general,
+    image: document.getElementById("event-image").value,
     active: true,
     creator: currentUser.email,
   }
@@ -958,6 +1011,7 @@ function handleCreateEvent(e) {
     id: mockData.news.length + 1,
     title: newEvent.title,
     type: "evento",
+    eventType: newEvent.type,
     date: newEvent.date.split("T")[0],
     location: newEvent.location.split(",")[1]?.trim() || newEvent.location,
     genre: newEvent.genre,
@@ -993,6 +1047,14 @@ function openEditEventModal(eventId) {
   document.getElementById("edit-event-image").value = event.image
   document.getElementById("edit-event-active").value = event.active.toString()
 
+  // Mostrar/ocultar campo de género según el tipo
+  const editGenreGroup = document.getElementById("edit-genre-group")
+  if (event.type === "concierto") {
+    editGenreGroup.style.display = "block"
+  } else {
+    editGenreGroup.style.display = "none"
+  }
+
   document.getElementById("edit-event-modal").style.display = "block"
 }
 
@@ -1011,15 +1073,16 @@ function handleEditEvent(e) {
     return
   }
 
+  const eventType = document.getElementById("edit-event-type").value
+
   // Actualizar evento
   event.title = document.getElementById("edit-event-title").value
-  event.type = document.getElementById("edit-event-type").value
+  event.type = eventType
   event.date = document.getElementById("edit-event-date").value
   event.location = document.getElementById("edit-event-location").value
-  event.genre = document.getElementById("edit-event-genre").value
+  event.genre = eventType === "concierto" ? document.getElementById("edit-event-genre").value : ""
   event.description = document.getElementById("edit-event-description").value
 
-  // Si se proporciona una imagen, usarla; de lo contrario, usar la imagen por defecto del género
   const imageInput = document.getElementById("edit-event-image").value
   event.image = imageInput || mockData.genreImages[event.genre.toLowerCase()] || mockData.genreImages.general
 
@@ -1030,6 +1093,7 @@ function handleEditEvent(e) {
 
   if (newsItem) {
     newsItem.title = event.title
+    newsItem.eventType = event.type
     newsItem.date = event.date.split("T")[0]
     newsItem.location = event.location.split(",")[1]?.trim() || event.location
     newsItem.genre = event.genre
@@ -1682,6 +1746,7 @@ function handleCreateBenefit(e) {
     description: document.getElementById("benefit-description").value,
     validUntil: document.getElementById("benefit-valid").value,
     category: document.getElementById("benefit-category").value,
+    image: document.getElementById("benefit-image").value, // Usar imagen proporcionada
     active: true,
     creator: currentUser.email,
   }
@@ -1704,7 +1769,7 @@ function handleCreateBenefit(e) {
     location: "General",
     genre: "general",
     description: newBenefit.description,
-    image: mockData.genreImages.benefit,
+    image: newBenefit.image,
   })
 
   document.getElementById("create-benefit-modal").style.display = "none"
