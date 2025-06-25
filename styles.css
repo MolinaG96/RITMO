@@ -1,0 +1,985 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #f8f9fa;
+}
+
+/* Navbar */
+.navbar {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 1rem 0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+}
+
+/* Mejorar logo */
+.nav-logo {
+  display: flex;
+  align-items: center;
+  color: white;
+  font-size: 1.8rem;
+  font-weight: bold;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.logo-text {
+  background: linear-gradient(135deg, #fff 0%, #e0e0e0 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  letter-spacing: 1px;
+}
+
+.logo-icon {
+  margin-right: 0.5rem;
+  font-size: 2.2rem;
+  color: #fff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+/* Modificar el estilo de la navbar para alinear correctamente el botón de perfil */
+.nav-menu {
+  display: flex;
+  list-style: none;
+  gap: 2rem;
+  align-items: center; /* Asegura alineación vertical */
+}
+
+.nav-link {
+  color: white;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.auth-btn {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.auth-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Main Content */
+.main-content {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 2rem;
+}
+
+.section {
+  display: none;
+}
+
+.section.active {
+  display: block;
+}
+
+.container {
+  width: 100%;
+}
+
+h1 {
+  color: #333;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+/* Filters */
+.filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  flex-wrap: wrap;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.filter-group label {
+  font-weight: bold;
+  color: #555;
+}
+
+.filter-group select,
+.filter-group input {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 0.9rem;
+}
+
+/* Buttons */
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+/* Mejorar estilos de botones en novedades */
+.btn-secondary {
+  background: #764ba2;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background: #667eea;
+  transform: translateY(-2px);
+}
+
+/* News Grid */
+.news-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* Añadir estilos para mejorar la visualización de imágenes y legibilidad */
+
+/* Estilos para las cards de novedades con imagen de fondo */
+.news-card {
+  background: white;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.news-card-with-bg {
+  color: white;
+  position: relative;
+  z-index: 1;
+  height: 350px;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.2),
+    rgba(0, 0, 0, 0.6)
+  );
+  z-index: 1;
+  border-radius: 10px;
+}
+
+.news-card-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  border-radius: 10px;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  position: relative;
+  z-index: 2;
+  color: white;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.card-content h3 {
+  color: white;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.card-content .meta {
+  margin-bottom: 0.5rem;
+}
+
+.card-content .meta span {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.card-content p {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.card-content .badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+  text-shadow: none;
+}
+
+.badge-event {
+  background: #3a86ff;
+  color: white;
+}
+
+.badge-benefit {
+  background: #38b000;
+  color: white;
+}
+
+/* Estilos para eventos con imagen de fondo */
+.event-card {
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.event-card.with-bg-image {
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background-size: cover;
+  background-position: center;
+  padding: 0;
+}
+
+.event-content {
+  position: relative;
+  z-index: 2;
+  padding: 1.5rem;
+  color: white;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.event-content h4 {
+  color: white;
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+}
+
+.event-content p {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.event-content .event-stats {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.event-card:hover {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Estilos para el modal de detalles de evento */
+.event-detail-modal .modal-content {
+  max-width: 600px;
+  position: relative;
+  overflow: hidden;
+}
+
+.modal-content.with-bg-image {
+  color: white;
+  padding-top: 200px;
+}
+
+.modal-content.with-bg-image::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.3),
+    rgba(0, 0, 0, 0.9)
+  );
+  z-index: 0;
+}
+
+.modal-content.with-bg-image h2,
+.modal-content.with-bg-image p,
+.modal-content.with-bg-image span {
+  position: relative;
+  z-index: 1;
+  color: white;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.modal-content.with-bg-image .close {
+  color: white;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  z-index: 2;
+}
+
+.modal-content.with-bg-image #event-detail-actions {
+  position: relative;
+  z-index: 1;
+}
+
+/* Estilos para botones en modales con fondo */
+.modal-content.with-bg-image .btn-favorite,
+.modal-content.with-bg-image .btn-attend,
+.modal-content.with-bg-image .btn-edit,
+.modal-content.with-bg-image .btn-delete {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  margin-right: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.modal-content.with-bg-image .btn-favorite:hover,
+.modal-content.with-bg-image .btn-attend:hover,
+.modal-content.with-bg-image .btn-edit:hover,
+.modal-content.with-bg-image .btn-delete:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.modal-content.with-bg-image .btn-favorite.active {
+  background: #dc3545;
+  border-color: #dc3545;
+}
+
+.modal-content.with-bg-image .btn-attend.active {
+  background: #28a745;
+  border-color: #28a745;
+}
+
+/* Estilos para el icono de favorito */
+.favorite-icon {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.7);
+  z-index: 3;
+  transition: color 0.3s ease;
+}
+
+.favorite-icon.active {
+  color: #dc3545;
+}
+
+.favorite-icon:hover {
+  transform: scale(1.2);
+}
+
+.news-card:hover {
+  transform: translateY(-5px);
+}
+
+.news-card h3 {
+  color: #c3ff00;
+  margin-bottom: 1rem;
+}
+
+.news-card .meta {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.news-card .meta span {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* Calendar */
+.calendar-container {
+  background: white;
+  border-radius: 10px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  background: #ddd;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+/* Mejorar estilos para el calendario */
+.calendar-day {
+  background: white;
+  padding: 1rem;
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  position: relative;
+  overflow: hidden;
+}
+
+.calendar-day.header {
+  background: #667eea;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  min-height: 40px;
+}
+
+.calendar-day.other-month {
+  background: #f8f9fa;
+  color: #ccc;
+}
+
+.calendar-day.has-event {
+  background: #e3f2fd;
+}
+
+.event-dot {
+  width: 8px;
+  height: 8px;
+  background: #667eea;
+  border-radius: 50%;
+  margin-top: 0.25rem;
+}
+
+.calendar-event {
+  background: rgba(102, 126, 234, 0.8);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  margin-top: 0.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  cursor: pointer;
+}
+
+/* Events List */
+.events-list {
+  background: white;
+  border-radius: 10px;
+  padding: 2rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos para eventos con imagen de fondo */
+.event-card {
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.event-card.with-bg-image {
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background-size: cover;
+  background-position: center;
+  padding: 0;
+}
+
+.event-content {
+  position: relative;
+  z-index: 2;
+  padding: 1.5rem;
+  color: white;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.event-content h4 {
+  color: white;
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+}
+
+.event-content p {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.event-content .event-stats {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.event-card:hover {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+}
+
+.event-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.event-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.event-actions button {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8rem;
+  border-radius: 3px;
+}
+
+.btn-favorite {
+  background: #ffc107;
+  color: #333;
+}
+
+.btn-attend {
+  background: #28a745;
+  color: white;
+}
+
+/* Benefits Grid */
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.benefit-card {
+  background: white;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.benefit-card:hover {
+  transform: translateY(-5px);
+}
+
+.benefit-card h3 {
+  color: #28a745;
+  margin-bottom: 1rem;
+}
+
+.benefit-discount {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #dc3545;
+  text-align: center;
+  margin: 1rem 0;
+}
+
+/* Forms */
+.form {
+  background: white;
+  border-radius: 10px;
+  padding: 2rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: #555;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+}
+
+.form-group small {
+  color: #666;
+  font-size: 0.8rem;
+}
+
+/* Profile */
+.profile-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.profile-section {
+  background: white;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.profile-section h3 {
+  color: #667eea;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 0.5rem;
+}
+
+/* Estilos para editar perfil */
+.edit-profile-form {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.genre-checkbox {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.genre-checkbox label {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  background: #eee;
+  border-radius: 15px;
+  cursor: pointer;
+}
+
+.genre-checkbox input:checked + label {
+  background: #667eea;
+  color: white;
+}
+
+/* Modals */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 2000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background-color: white;
+  margin: 5% auto;
+  padding: 2rem;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+  animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.close {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  font-size: 2rem;
+  cursor: pointer;
+  color: #aaa;
+}
+
+.close:hover {
+  color: #333;
+}
+
+.success-message {
+  text-align: center;
+}
+
+.success-message i {
+  font-size: 4rem;
+  color: #28a745;
+  margin-bottom: 1rem;
+}
+
+.success-message h2 {
+  color: #28a745;
+  margin-bottom: 1rem;
+}
+
+/* Ajustar modal para que no exceda la pantalla */
+.modal-content {
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+/* Estilos para el modal de evento del calendario */
+.event-detail-modal .modal-content {
+  max-width: 600px;
+  position: relative;
+  overflow: hidden;
+}
+
+.modal-content.with-bg-image {
+  color: white;
+  padding-top: 200px;
+}
+
+.modal-content.with-bg-image::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.3),
+    rgba(0, 0, 0, 0.9)
+  );
+  z-index: 0;
+}
+
+.modal-content.with-bg-image h2,
+.modal-content.with-bg-image p,
+.modal-content.with-bg-image span {
+  position: relative;
+  z-index: 1;
+  color: white;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.modal-content.with-bg-image .close {
+  color: white;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  z-index: 2;
+}
+
+.modal-content.with-bg-image #event-detail-actions {
+  position: relative;
+  z-index: 1;
+}
+
+/* Estilos para botones en modales con fondo */
+.modal-content.with-bg-image .btn-favorite,
+.modal-content.with-bg-image .btn-attend,
+.modal-content.with-bg-image .btn-edit,
+.modal-content.with-bg-image .btn-delete {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  margin-right: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.modal-content.with-bg-image .btn-favorite:hover,
+.modal-content.with-bg-image .btn-attend:hover,
+.modal-content.with-bg-image .btn-edit:hover,
+.modal-content.with-bg-image .btn-delete:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.modal-content.with-bg-image .btn-favorite.active {
+  background: #dc3545;
+  border-color: #dc3545;
+}
+
+.modal-content.with-bg-image .btn-attend.active {
+  background: #28a745;
+  border-color: #28a745;
+}
+
+.event-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+/* Estilos para botones de acción en eventos/beneficios */
+.admin-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.btn-edit {
+  background: #ffc107;
+  color: #333;
+}
+
+.btn-delete {
+  background: #dc3545;
+  color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .nav-container {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .nav-menu {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .filters {
+    flex-direction: column;
+  }
+
+  .calendar {
+    font-size: 0.8rem;
+  }
+
+  .calendar-day {
+    min-height: 60px;
+    padding: 0.5rem;
+  }
+
+  .event-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .main-content {
+    padding: 0 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .news-grid,
+  .benefits-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-container {
+    grid-template-columns: 1fr;
+  }
+}
