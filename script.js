@@ -309,6 +309,13 @@ function setupEventListeners() {
   })
 
   document.getElementById("create-event-form").addEventListener("submit", handleCreateEvent)
+  
+  // Crear beneficio
+  document.getElementById("create-benefit-btn").addEventListener("click", () => {
+    document.getElementById("create-benefit-modal").style.display = "block"
+  })
+
+  document.getElementById("create-benefit-form").addEventListener("submit", handleCreateBenefit)
 
   // Trámites
   document.getElementById("tramite-tipo").addEventListener("change", function () {
@@ -370,12 +377,29 @@ function showSection(sectionName) {
 
   currentSection = sectionName
 
+  // Limpiar gráficos antes de cargar nueva sección
+  cleanupCharts()
+
   // Cargar contenido específico de la sección
   switch (sectionName) {
+     case "novedades":
+      loadNovedades()
+      break
+    case "eventos":
+      loadEvents()
+      break
+    case "beneficios":
+      loadBenefits()
+      break
     case "perfil":
       loadProfile()
       break
+    case "estadisticas":
+      loadStatistics()
+      break
   }
+
+  cleanupCharts()
 }
 
 function handleLogin(e) {
@@ -400,13 +424,19 @@ function logout() {
   localStorage.removeItem("currentUser")
   updateUIForLoggedUser()
   showSection("novedades")
+
+  // Si estaba en perfil o estadísticas, volver a novedades
+  if (currentSection === "perfil" || currentSection === "estadisticas") {
+    showSection("novedades")
+  }
 }
 
 function updateUIForLoggedUser() {
   const loginBtn = document.getElementById("login-btn")
   const logoutBtn = document.getElementById("logout-btn")
-  const perfilLink = document.getElementById("perfil-link")
+  const perfilItem = document.getElementById("perfil-item")
   const createEventBtn = document.getElementById("create-event-btn")
+  const estadisticasItem = document.getElementById("estadisticas-item")
 
   if (currentUser) {
     loginBtn.style.display = "none"
@@ -414,9 +444,9 @@ function updateUIForLoggedUser() {
 
     // Mostrar perfil solo para afiliados
     if (currentUser.type === "afiliado") {
-      perfilLink.style.display = "block"
+      perfilItem.classList.remove("hidden")
     } else {
-      perfilLink.style.display = "none"
+      perfilItem.classList.add("hidden")
     }
 
     // Mostrar botón crear evento para empresas y admins
@@ -425,34 +455,62 @@ function updateUIForLoggedUser() {
     } else {
       createEventBtn.style.display = "none"
     }
+    
+    const createBenefitBtn = document.getElementById("create-benefit-btn")
+
+    // Mostrar botón crear beneficio para empresas y admins
+    if (currentUser.type === "empresa" || currentUser.type === "admin") {
+      createBenefitBtn.style.display = "block"
+    } else {
+      createBenefitBtn.style.display = "none"
+    }
 
     logoutBtn.innerHTML = `<i class="fas fa-sign-out-alt"></i> ${currentUser.name}`
 
     // Actualizar opciones de trámites
     updateTramitesOptions()
+    
+    // Mostrar estadísticas solo para admins
+    if (currentUser.type === "admin") {
+      estadisticasItem.classList.remove("hidden")
+    } else {
+      estadisticasItem.classList.add("hidden")
+    }
   } else {
     loginBtn.style.display = "block"
     logoutBtn.style.display = "none"
-    perfilLink.style.display = "none"
+    perfilItem.classList.add("hidden")
     createEventBtn.style.display = "none"
+    estadisticasItem.classList.add("hidden")
+
+    const createBenefitBtn = document.getElementById("create-benefit-btn")
+    createBenefitBtn.style.display = "none"
 
     // Actualizar opciones de trámites para no logueados
     updateTramitesOptions()
   }
 
-  // Recargar eventos para mostrar botones de favoritos/asistencia
-  if (currentSection === "eventos") {
-    loadEvents()
-  }
-
-  // Recargar beneficios para mostrar botones de solicitud
-  if (currentSection === "beneficios") {
-    loadBenefits()
-  }
-
-  // Recargar novedades para mostrar corazones de favoritos
-  if (currentSection === "novedades") {
-    loadNovedades()
+  // Recargar la sección actual para mostrar las acciones específicas del rol
+  switch (currentSection) {
+    case "novedades":
+      loadNovedades()
+      break
+    case "eventos":
+      loadEvents()
+      break
+    case "beneficios":
+      loadBenefits()
+      break
+    case "perfil":
+      if (currentUser && currentUser.type === "afiliado") {
+        loadProfile()
+      }
+      break
+    case "estadisticas":
+      if (currentUser && currentUser.type === "admin") {
+        loadStatistics()
+      }
+      break
   }
 }
 
@@ -1298,6 +1356,369 @@ function cancelEditFavorites() {
   document.getElementById("edit-favorites-modal").style.display = "none"
 }
 
+// Datos mock para estadísticas
+const statsData = {
+  attendanceByMonth: {
+    labels: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+    data: [65, 78, 82, 71, 89, 95, 88, 92, 85, 79, 83, 90],
+  },
+  genrePopularity: {
+    labels: ["Rock", "Jazz", "Tango", "Clásica", "Folclore", "Pop"],
+    data: [35, 25, 20, 15, 12, 8],
+  },
+  topBenefits: {
+    labels: ["Instrumentos", "Estudios", "Clases", "Equipos", "Conciertos"],
+    data: [45, 38, 32, 28, 22],
+  },
+  memberGrowth: {
+    labels: ["Ene 2023", "Mar 2023", "May 2023", "Jul 2023", "Sep 2023", "Nov 2023", "Ene 2024", "Mar 2024"],
+    data: [850, 920, 1050, 1180, 1220, 1190, 1247, 1285],
+  },
+  locationDistribution: {
+    labels: ["Buenos Aires", "Córdoba", "Rosario", "Mendoza", "Otras"],
+    data: [45, 20, 15, 12, 8],
+  },
+  eventTypes: {
+    labels: ["Conciertos", "Talleres", "Reuniones", "Marchas", "Otros"],
+    data: [40, 25, 20, 10, 5],
+  },
+}
+
+let charts = {}
+
+function loadStatistics() {
+  if (!currentUser || currentUser.type !== "admin") {
+    document.getElementById("estadisticas").innerHTML =
+      '<div class="container"><p>Solo los administradores pueden ver las estadísticas.</p></div>'
+    return
+  }
+
+  // Crear gráficos después de un pequeño delay para asegurar que el DOM esté listo
+  setTimeout(() => {
+    createAttendanceChart()
+    createGenresChart()
+    createBenefitsChart()
+    createGrowthChart()
+    createLocationChart()
+    createEventTypesChart()
+  }, 100)
+}
+
+function createAttendanceChart() {
+  const ctx = document.getElementById("attendanceChart")
+  if (!ctx) return
+
+  if (charts.attendance) {
+    charts.attendance.destroy()
+  }
+
+  charts.attendance = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: statsData.attendanceByMonth.labels,
+      datasets: [
+        {
+          label: "Porcentaje de Asistencia",
+          data: statsData.attendanceByMonth.data,
+          borderColor: "#667eea",
+          backgroundColor: "rgba(102, 126, 234, 0.1)",
+          borderWidth: 3,
+          fill: true,
+          tension: 0.4,
+          pointBackgroundColor: "#667eea",
+          pointBorderColor: "#fff",
+          pointBorderWidth: 2,
+          pointRadius: 6,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false,
+        },
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: 100,
+          ticks: {
+            callback: (value) => value + "%",
+          },
+        },
+      },
+    },
+  })
+}
+
+function createGenresChart() {
+  const ctx = document.getElementById("genresChart")
+  if (!ctx) return
+
+  if (charts.genres) {
+    charts.genres.destroy()
+  }
+
+  charts.genres = new Chart(ctx, {
+    type: "doughnut",
+    data: {
+      labels: statsData.genrePopularity.labels,
+      datasets: [
+        {
+          data: statsData.genrePopularity.data,
+          backgroundColor: ["#667eea", "#764ba2", "#f093fb", "#f5576c", "#4facfe", "#00f2fe"],
+          borderWidth: 0,
+          hoverOffset: 10,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: "bottom",
+          labels: {
+            padding: 20,
+            usePointStyle: true,
+          },
+        },
+      },
+    },
+  })
+}
+
+function createBenefitsChart() {
+  const ctx = document.getElementById("benefitsChart")
+  if (!ctx) return
+
+  if (charts.benefits) {
+    charts.benefits.destroy()
+  }
+
+  charts.benefits = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: statsData.topBenefits.labels,
+      datasets: [
+        {
+          label: "Usos",
+          data: statsData.topBenefits.data,
+          backgroundColor: ["#667eea", "#764ba2", "#f093fb", "#f5576c", "#4facfe"],
+          borderRadius: 8,
+          borderSkipped: false,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false,
+        },
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+        },
+      },
+    },
+  })
+}
+
+function createGrowthChart() {
+  const ctx = document.getElementById("growthChart")
+  if (!ctx) return
+
+  if (charts.growth) {
+    charts.growth.destroy()
+  }
+
+  charts.growth = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: statsData.memberGrowth.labels,
+      datasets: [
+        {
+          label: "Afiliados",
+          data: statsData.memberGrowth.data,
+          borderColor: "#28a745",
+          backgroundColor: "rgba(40, 167, 69, 0.1)",
+          borderWidth: 3,
+          fill: true,
+          tension: 0.4,
+          pointBackgroundColor: "#28a745",
+          pointBorderColor: "#fff",
+          pointBorderWidth: 2,
+          pointRadius: 6,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false,
+        },
+      },
+      scales: {
+        y: {
+          beginAtZero: false,
+        },
+      },
+    },
+  })
+}
+
+function createLocationChart() {
+  const ctx = document.getElementById("locationChart")
+  if (!ctx) return
+
+  if (charts.location) {
+    charts.location.destroy()
+  }
+
+  charts.location = new Chart(ctx, {
+    type: "pie",
+    data: {
+      labels: statsData.locationDistribution.labels,
+      datasets: [
+        {
+          data: statsData.locationDistribution.data,
+          backgroundColor: ["#667eea", "#764ba2", "#f093fb", "#f5576c", "#4facfe"],
+          borderWidth: 2,
+          borderColor: "#fff",
+          hoverOffset: 8,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: "bottom",
+          labels: {
+            padding: 20,
+            usePointStyle: true,
+          },
+        },
+      },
+    },
+  })
+}
+
+function createEventTypesChart() {
+  const ctx = document.getElementById("eventTypesChart")
+  if (!ctx) return
+
+  if (charts.eventTypes) {
+    charts.eventTypes.destroy()
+  }
+
+  charts.eventTypes = new Chart(ctx, {
+    type: "polarArea",
+    data: {
+      labels: statsData.eventTypes.labels,
+      datasets: [
+        {
+          data: statsData.eventTypes.data,
+          backgroundColor: [
+            "rgba(102, 126, 234, 0.8)",
+            "rgba(118, 75, 162, 0.8)",
+            "rgba(240, 147, 251, 0.8)",
+            "rgba(245, 87, 108, 0.8)",
+            "rgba(79, 172, 254, 0.8)",
+          ],
+          borderColor: ["#667eea", "#764ba2", "#f093fb", "#f5576c", "#4facfe"],
+          borderWidth: 2,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: "bottom",
+          labels: {
+            padding: 20,
+            usePointStyle: true,
+          },
+        },
+      },
+      scales: {
+        r: {
+          beginAtZero: true,
+        },
+      },
+    },
+  })
+}
+
+// Función para limpiar gráficos al cambiar de sección
+function cleanupCharts() {
+  Object.values(charts).forEach((chart) => {
+    if (chart) {
+      chart.destroy()
+    }
+  })
+  charts = {}
+}
+
+
+function handleCreateBenefit(e) {
+  e.preventDefault()
+
+  const newBenefit = {
+    id: mockData.benefits.length + 1,
+    title: document.getElementById("benefit-title").value,
+    company: document.getElementById("benefit-company").value,
+    discount: document.getElementById("benefit-discount").value,
+    description: document.getElementById("benefit-description").value,
+    validUntil: document.getElementById("benefit-valid").value,
+    category: document.getElementById("benefit-category").value,
+    active: true,
+    creator: currentUser.email,
+  }
+
+  mockData.benefits.push(newBenefit)
+
+  // Si es una empresa, añadir a sus beneficios propios
+  if (currentUser.type === "empresa") {
+    currentUser.ownBenefits = currentUser.ownBenefits || []
+    currentUser.ownBenefits.push(newBenefit.id)
+    localStorage.setItem("currentUser", JSON.stringify(currentUser))
+  }
+
+  // Agregar también a novedades
+  mockData.news.unshift({
+    id: mockData.news.length + 1,
+    title: newBenefit.title,
+    type: "beneficio",
+    date: new Date().toISOString().split("T")[0],
+    location: "General",
+    genre: "general",
+    description: newBenefit.description,
+    image: mockData.genreImages.benefit,
+  })
+
+  document.getElementById("create-benefit-modal").style.display = "none"
+  document.getElementById("create-benefit-form").reset()
+
+  loadBenefits()
+
+  if (currentSection === "novedades") {
+    loadNovedades()
+  }
+
+  alert("Beneficio creado exitosamente")
+}
+
 // Agregar estilos CSS adicionales
 const additionalStyles = `
 .badge {
@@ -1453,6 +1874,10 @@ const additionalStyles = `
 .modal-content.with-bg-image {
     color: white;
     text-shadow: 1px 1px 2px black;
+}
+
+.hidden {
+    display: none !important;
 }
 `
 

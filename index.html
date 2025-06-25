@@ -1,428 +1,661 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>RITMO - Sindicato de Música</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-</head>
-<body>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
     <!-- Navbar -->
     <nav class="navbar">
-        <div class="nav-container">
-            <!-- Actualizar el logo en la navbar -->
-            <div class="nav-logo">
-                <i class="fas fa-music logo-icon"></i>
-                <span class="logo-text">RITMO</span>
-            </div>
-            <ul class="nav-menu">
-                <li class="nav-item">
-                    <a href="#" class="nav-link active" data-section="novedades">Novedades</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link" data-section="eventos">Eventos</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link" data-section="beneficios">Beneficios</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link" data-section="tramites">Trámites</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link" data-section="perfil" id="perfil-link" style="display: none;">Perfil</a>
-                </li>
-            </ul>
-            <div class="nav-auth">
-                <button id="login-btn" class="auth-btn">
-                    <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
-                </button>
-                <button id="logout-btn" class="auth-btn" style="display: none;">
-                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
-                </button>
-            </div>
+      <div class="nav-container">
+        <!-- Actualizar el logo en la navbar -->
+        <div class="nav-logo">
+          <i class="fas fa-music logo-icon"></i>
+          <span class="logo-text">RITMO</span>
         </div>
+        <ul class="nav-menu">
+          <li class="nav-item">
+            <a href="#" class="nav-link active" data-section="novedades"
+              >Novedades</a
+            >
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link" data-section="eventos">Eventos</a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link" data-section="beneficios"
+              >Beneficios</a
+            >
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link" data-section="tramites">Trámites</a>
+          </li>
+          <li class="nav-item hidden" id="perfil-item">
+            <a href="#" class="nav-link" data-section="perfil" id="perfil-link"
+              >Perfil</a
+            >
+          </li>
+          <li class="nav-item hidden" id="estadisticas-item">
+            <a
+              href="#"
+              class="nav-link"
+              data-section="estadisticas"
+              id="estadisticas-link"
+              >Estadísticas</a
+            >
+          </li>
+        </ul>
+        <div class="nav-auth">
+          <button id="login-btn" class="auth-btn">
+            <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+          </button>
+          <button id="logout-btn" class="auth-btn" style="display: none">
+            <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+          </button>
+        </div>
+      </div>
     </nav>
 
     <!-- Main Content -->
     <main class="main-content">
-        <!-- Modificar la sección de novedades para quitar título redundante -->
-        <section id="novedades" class="section active">
-            <div class="container">
-                <!-- Filtros -->
-                <div class="filters">
-                    <div class="filter-group">
-                        <label for="location-filter">Ubicación:</label>
-                        <select id="location-filter">
-                            <option value="">Todas las ubicaciones</option>
-                            <option value="Buenos Aires">Buenos Aires</option>
-                            <option value="Córdoba">Córdoba</option>
-                            <option value="Rosario">Rosario</option>
-                            <option value="Mendoza">Mendoza</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label for="genre-filter">Género:</label>
-                        <select id="genre-filter">
-                            <option value="">Todos los géneros</option>
-                            <option value="rock">Rock</option>
-                            <option value="jazz">Jazz</option>
-                            <option value="clasica">Clásica</option>
-                            <option value="folclore">Folclore</option>
-                            <option value="tango">Tango</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label for="date-filter">Fecha:</label>
-                        <input type="date" id="date-filter">
-                    </div>
-                    <button id="clear-filters" class="btn-secondary">Limpiar Filtros</button>
-                </div>
-
-                <!-- Novedades Grid -->
-                <div id="novedades-grid" class="news-grid">
-                    <!-- Las novedades se cargarán dinámicamente -->
-                </div>
-
-                <!-- Paginación -->
-                <div class="pagination">
-                    <button id="prev-page" class="btn-secondary">Anterior</button>
-                    <span id="page-info">Página 1 de 3</span>
-                    <button id="next-page" class="btn-secondary">Siguiente</button>
-                </div>
+      <!-- Modificar la sección de novedades para quitar título redundante -->
+      <section id="novedades" class="section active">
+        <div class="container">
+          <!-- Filtros -->
+          <div class="filters">
+            <div class="filter-group">
+              <label for="location-filter">Ubicación:</label>
+              <select id="location-filter">
+                <option value="">Todas las ubicaciones</option>
+                <option value="Buenos Aires">Buenos Aires</option>
+                <option value="Córdoba">Córdoba</option>
+                <option value="Rosario">Rosario</option>
+                <option value="Mendoza">Mendoza</option>
+              </select>
             </div>
-        </section>
-
-        <section id="eventos" class="section">
-            <div class="container">
-                <div class="section-header">
-                    <div></div> <!-- Espacio vacío para mantener la estructura -->
-                    <button id="create-event-btn" class="btn-primary" style="display: none;">
-                        <i class="fas fa-plus"></i> Crear Evento
-                    </button>
-                </div>
-
-                <!-- Calendario -->
-                <div class="calendar-container">
-                    <div class="calendar-header">
-                        <button id="prev-month" class="btn-secondary">
-                            <i class="fas fa-chevron-left"></i>
-                        </button>
-                        <h2 id="current-month">Enero 2024</h2>
-                        <button id="next-month" class="btn-secondary">
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
-                    </div>
-                    <div id="calendar" class="calendar">
-                        <!-- El calendario se generará dinámicamente -->
-                    </div>
-                </div>
-
-                <!-- Lista de Eventos -->
-                <div class="events-list">
-                    <h3>Próximos Eventos</h3>
-                    <div id="events-container">
-                        <!-- Los eventos se cargarán dinámicamente -->
-                    </div>
-                </div>
+            <div class="filter-group">
+              <label for="genre-filter">Género:</label>
+              <select id="genre-filter">
+                <option value="">Todos los géneros</option>
+                <option value="rock">Rock</option>
+                <option value="jazz">Jazz</option>
+                <option value="clasica">Clásica</option>
+                <option value="folclore">Folclore</option>
+                <option value="tango">Tango</option>
+              </select>
             </div>
-        </section>
+            <div class="filter-group">
+              <label for="date-filter">Fecha:</label>
+              <input type="date" id="date-filter" />
+            </div>
+            <button id="clear-filters" class="btn-secondary">
+              Limpiar Filtros
+            </button>
+          </div>
 
-        <!-- Modificar la sección de beneficios para quitar título redundante -->
-        <section id="beneficios" class="section">
-            <div class="container">
-                <div id="benefits-grid" class="benefits-grid">
-                    <!-- Los beneficios se cargarán dinámicamente -->
+          <!-- Novedades Grid -->
+          <div id="novedades-grid" class="news-grid">
+            <!-- Las novedades se cargarán dinámicamente -->
+          </div>
+
+          <!-- Paginación -->
+          <div class="pagination">
+            <button id="prev-page" class="btn-secondary">Anterior</button>
+            <span id="page-info">Página 1 de 3</span>
+            <button id="next-page" class="btn-secondary">Siguiente</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="eventos" class="section">
+        <div class="container">
+          <div class="section-header">
+            <div></div>
+            <!-- Espacio vacío para mantener la estructura -->
+            <button
+              id="create-event-btn"
+              class="btn-primary"
+              style="display: none"
+            >
+              <i class="fas fa-plus"></i> Crear Evento
+            </button>
+          </div>
+
+          <!-- Calendario -->
+          <div class="calendar-container">
+            <div class="calendar-header">
+              <button id="prev-month" class="btn-secondary">
+                <i class="fas fa-chevron-left"></i>
+              </button>
+              <h2 id="current-month">Enero 2024</h2>
+              <button id="next-month" class="btn-secondary">
+                <i class="fas fa-chevron-right"></i>
+              </button>
+            </div>
+            <div id="calendar" class="calendar">
+              <!-- El calendario se generará dinámicamente -->
+            </div>
+          </div>
+
+          <!-- Lista de Eventos -->
+          <div class="events-list">
+            <h3>Próximos Eventos</h3>
+            <div id="events-container">
+              <!-- Los eventos se cargarán dinámicamente -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Modificar la sección de beneficios para quitar título redundante -->
+      <section id="beneficios" class="section">
+        <div class="container">
+          <div class="section-header">
+            <div></div>
+            <!-- Espacio vacío para mantener la estructura -->
+            <button
+              id="create-benefit-btn"
+              class="btn-primary"
+              style="display: none"
+            >
+              <i class="fas fa-plus"></i> Crear Beneficio
+            </button>
+          </div>
+          <div id="benefits-grid" class="benefits-grid">
+            <!-- Los beneficios se cargarán dinámicamente -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Modificar la sección de trámites para quitar título redundante -->
+      <section id="tramites" class="section">
+        <div class="container">
+          <form id="tramites-form" class="form">
+            <div class="form-group">
+              <label for="tramite-tipo">Tipo de Trámite:</label>
+              <select id="tramite-tipo" required>
+                <option value="">Seleccionar tipo de trámite</option>
+                <option value="afiliacion">Solicitar Afiliación</option>
+                <option value="consulta-eventos" class="logged-only">
+                  Consulta por Eventos
+                </option>
+                <option value="reclamo" class="logged-only">Reclamo</option>
+                <option value="sugerencia" class="logged-only">
+                  Sugerencia
+                </option>
+                <option value="otro" class="logged-only">Otro</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="comentarios">Comentarios:</label>
+              <textarea
+                id="comentarios"
+                rows="5"
+                required
+                placeholder="Describe tu consulta o trámite..."
+              ></textarea>
+            </div>
+            <div class="form-group" id="documentos-group" style="display: none">
+              <label for="documentos">Adjuntar Documentos:</label>
+              <input
+                type="file"
+                id="documentos"
+                multiple
+                accept=".pdf,.doc,.docx,.jpg,.png"
+              />
+              <small>Formatos permitidos: PDF, DOC, DOCX, JPG, PNG</small>
+            </div>
+            <button type="submit" class="btn-primary">Enviar Trámite</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- Modificar la sección de perfil para añadir edición -->
+      <section id="perfil" class="section">
+        <div class="container">
+          <div class="profile-container">
+            <div class="profile-section">
+              <h3>Datos Personales</h3>
+              <div id="personal-data">
+                <!-- Los datos se cargarán dinámicamente -->
+              </div>
+            </div>
+            <div class="profile-section">
+              <h3>
+                Gustos Musicales
+                <button id="edit-genres-btn" class="btn-secondary btn-sm">
+                  <i class="fas fa-edit"></i> Editar
+                </button>
+              </h3>
+              <div id="musical-preferences">
+                <!-- Las preferencias se cargarán dinámicamente -->
+              </div>
+              <div
+                id="edit-genres-form"
+                class="edit-profile-form"
+                style="display: none"
+              >
+                <div class="genre-checkbox" id="genre-checkboxes">
+                  <!-- Se generará dinámicamente -->
                 </div>
+                <button id="save-genres-btn" class="btn-primary btn-sm">
+                  Guardar
+                </button>
+                <button id="cancel-genres-btn" class="btn-secondary btn-sm">
+                  Cancelar
+                </button>
+              </div>
             </div>
-        </section>
-
-        <!-- Modificar la sección de trámites para quitar título redundante -->
-        <section id="tramites" class="section">
-            <div class="container">
-                <form id="tramites-form" class="form">
-                    <div class="form-group">
-                        <label for="tramite-tipo">Tipo de Trámite:</label>
-                        <select id="tramite-tipo" required>
-                            <option value="">Seleccionar tipo de trámite</option>
-                            <option value="afiliacion">Solicitar Afiliación</option>
-                            <option value="consulta-eventos" class="logged-only">Consulta por Eventos</option>
-                            <option value="reclamo" class="logged-only">Reclamo</option>
-                            <option value="sugerencia" class="logged-only">Sugerencia</option>
-                            <option value="otro" class="logged-only">Otro</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="comentarios">Comentarios:</label>
-                        <textarea id="comentarios" rows="5" required placeholder="Describe tu consulta o trámite..."></textarea>
-                    </div>
-                    <div class="form-group" id="documentos-group" style="display: none;">
-                        <label for="documentos">Adjuntar Documentos:</label>
-                        <input type="file" id="documentos" multiple accept=".pdf,.doc,.docx,.jpg,.png">
-                        <small>Formatos permitidos: PDF, DOC, DOCX, JPG, PNG</small>
-                    </div>
-                    <button type="submit" class="btn-primary">Enviar Trámite</button>
-                </form>
+            <div class="profile-section">
+              <h3>Historial de Eventos</h3>
+              <div id="events-history">
+                <!-- El historial se cargarán dinámicamente -->
+              </div>
             </div>
-        </section>
-
-        <!-- Modificar la sección de perfil para añadir edición -->
-        <section id="perfil" class="section">
-            <div class="container">
-                <div class="profile-container">
-                    <div class="profile-section">
-                        <h3>Datos Personales</h3>
-                        <div id="personal-data">
-                            <!-- Los datos se cargarán dinámicamente -->
-                        </div>
-                    </div>
-                    <div class="profile-section">
-                        <h3>Gustos Musicales <button id="edit-genres-btn" class="btn-secondary btn-sm"><i class="fas fa-edit"></i> Editar</button></h3>
-                        <div id="musical-preferences">
-                            <!-- Las preferencias se cargarán dinámicamente -->
-                        </div>
-                        <div id="edit-genres-form" class="edit-profile-form" style="display: none;">
-                            <div class="genre-checkbox" id="genre-checkboxes">
-                                <!-- Se generará dinámicamente -->
-                            </div>
-                            <button id="save-genres-btn" class="btn-primary btn-sm">Guardar</button>
-                            <button id="cancel-genres-btn" class="btn-secondary btn-sm">Cancelar</button>
-                        </div>
-                    </div>
-                    <div class="profile-section">
-                        <h3>Historial de Eventos</h3>
-                        <div id="events-history">
-                            <!-- El historial se cargarán dinámicamente -->
-                        </div>
-                    </div>
-                    <div class="profile-section">
-                        <h3>Eventos Favoritos <button id="edit-favorites-btn" class="btn-secondary btn-sm"><i class="fas fa-edit"></i> Editar</button></h3>
-                        <div id="favorite-events">
-                            <!-- Los favoritos se cargarán dinámicamente -->
-                        </div>
-                        <div id="edit-favorites-form" class="edit-profile-form" style="display: none;">
-                            <div id="favorites-list">
-                                <!-- Se generará dinámicamente -->
-                            </div>
-                            <button id="save-favorites-btn" class="btn-primary btn-sm">Guardar</button>
-                            <button id="cancel-favorites-btn" class="btn-secondary btn-sm">Cancelar</button>
-                        </div>
-                    </div>
-                    <div class="profile-section">
-                        <h3>Beneficios Utilizados</h3>
-                        <div id="used-benefits">
-                            <!-- Los beneficios utilizados se cargarán dinámicamente -->
-                        </div>
-                    </div>
+            <div class="profile-section">
+              <h3>
+                Eventos Favoritos
+                <button id="edit-favorites-btn" class="btn-secondary btn-sm">
+                  <i class="fas fa-edit"></i> Editar
+                </button>
+              </h3>
+              <div id="favorite-events">
+                <!-- Los favoritos se cargarán dinámicamente -->
+              </div>
+              <div
+                id="edit-favorites-form"
+                class="edit-profile-form"
+                style="display: none"
+              >
+                <div id="favorites-list">
+                  <!-- Se generará dinámicamente -->
                 </div>
+                <button id="save-favorites-btn" class="btn-primary btn-sm">
+                  Guardar
+                </button>
+                <button id="cancel-favorites-btn" class="btn-secondary btn-sm">
+                  Cancelar
+                </button>
+              </div>
             </div>
-        </section>
+            <div class="profile-section">
+              <h3>Beneficios Utilizados</h3>
+              <div id="used-benefits">
+                <!-- Los beneficios utilizados se cargarán dinámicamente -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sección Estadísticas -->
+      <section id="estadisticas" class="section">
+        <div class="container">
+          <div class="stats-grid">
+            <!-- Tarjetas de resumen -->
+            <div class="stats-summary">
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-info">
+                  <h3 id="total-users">1,247</h3>
+                  <p>Total Afiliados</p>
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="stat-info">
+                  <h3 id="total-events">156</h3>
+                  <p>Eventos Realizados</p>
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-gift"></i>
+                </div>
+                <div class="stat-info">
+                  <h3 id="total-benefits">89</h3>
+                  <p>Beneficios Activos</p>
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-percentage"></i>
+                </div>
+                <div class="stat-info">
+                  <h3 id="attendance-rate">73%</h3>
+                  <p>Tasa de Asistencia</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Gráficos -->
+            <div class="charts-container">
+              <div class="chart-card">
+                <h3>Asistencia por Mes</h3>
+                <canvas id="attendanceChart"></canvas>
+              </div>
+
+              <div class="chart-card">
+                <h3>Géneros Más Populares</h3>
+                <canvas id="genresChart"></canvas>
+              </div>
+
+              <div class="chart-card">
+                <h3>Beneficios Más Utilizados</h3>
+                <canvas id="benefitsChart"></canvas>
+              </div>
+
+              <div class="chart-card">
+                <h3>Crecimiento de Afiliados</h3>
+                <canvas id="growthChart"></canvas>
+              </div>
+
+              <div class="chart-card">
+                <h3>Distribución por Ubicación</h3>
+                <canvas id="locationChart"></canvas>
+              </div>
+
+              <div class="chart-card">
+                <h3>Eventos por Tipo</h3>
+                <canvas id="eventTypesChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
 
     <!-- Modal Login -->
     <div id="login-modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Iniciar Sesión</h2>
-            <form id="login-form">
-                <div class="form-group">
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="password">Contraseña:</label>
-                    <input type="password" id="password" required>
-                </div>
-                <div class="form-group">
-                    <label for="user-type">Tipo de Usuario:</label>
-                    <select id="user-type" required>
-                        <option value="">Seleccionar tipo</option>
-                        <option value="afiliado">Afiliado</option>
-                        <option value="empresa">Empresa</option>
-                        <option value="admin">Administrador</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn-primary">Iniciar Sesión</button>
-            </form>
-        </div>
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Iniciar Sesión</h2>
+        <form id="login-form">
+          <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" required />
+          </div>
+          <div class="form-group">
+            <label for="password">Contraseña:</label>
+            <input type="password" id="password" required />
+          </div>
+          <div class="form-group">
+            <label for="user-type">Tipo de Usuario:</label>
+            <select id="user-type" required>
+              <option value="">Seleccionar tipo</option>
+              <option value="afiliado">Afiliado</option>
+              <option value="empresa">Empresa</option>
+              <option value="admin">Administrador</option>
+            </select>
+          </div>
+          <button type="submit" class="btn-primary">Iniciar Sesión</button>
+        </form>
+      </div>
     </div>
 
     <!-- Modal Crear Evento -->
     <div id="create-event-modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Crear Nuevo Evento</h2>
-            <form id="create-event-form">
-                <div class="form-group">
-                    <label for="event-title">Título del Evento:</label>
-                    <input type="text" id="event-title" required>
-                </div>
-                <div class="form-group">
-                    <label for="event-type">Tipo de Evento:</label>
-                    <select id="event-type" required>
-                        <option value="">Seleccionar tipo</option>
-                        <option value="concierto">Concierto</option>
-                        <option value="reunion">Reunión</option>
-                        <option value="marcha">Marcha</option>
-                        <option value="taller">Taller</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="event-date">Fecha:</label>
-                    <input type="datetime-local" id="event-date" required>
-                </div>
-                <div class="form-group">
-                    <label for="event-location">Ubicación:</label>
-                    <input type="text" id="event-location" required>
-                </div>
-                <div class="form-group">
-                    <label for="event-genre">Género Musical:</label>
-                    <select id="event-genre">
-                        <option value="">Seleccionar género</option>
-                        <option value="rock">Rock</option>
-                        <option value="jazz">Jazz</option>
-                        <option value="clasica">Clásica</option>
-                        <option value="folclore">Folclore</option>
-                        <option value="tango">Tango</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="event-description">Descripción:</label>
-                    <textarea id="event-description" rows="4"></textarea>
-                </div>
-                <button type="submit" class="btn-primary">Crear Evento</button>
-            </form>
-        </div>
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Crear Nuevo Evento</h2>
+        <form id="create-event-form">
+          <div class="form-group">
+            <label for="event-title">Título del Evento:</label>
+            <input type="text" id="event-title" required />
+          </div>
+          <div class="form-group">
+            <label for="event-type">Tipo de Evento:</label>
+            <select id="event-type" required>
+              <option value="">Seleccionar tipo</option>
+              <option value="concierto">Concierto</option>
+              <option value="reunion">Reunión</option>
+              <option value="marcha">Marcha</option>
+              <option value="taller">Taller</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="event-date">Fecha:</label>
+            <input type="datetime-local" id="event-date" required />
+          </div>
+          <div class="form-group">
+            <label for="event-location">Ubicación:</label>
+            <input type="text" id="event-location" required />
+          </div>
+          <div class="form-group">
+            <label for="event-genre">Género Musical:</label>
+            <select id="event-genre">
+              <option value="">Seleccionar género</option>
+              <option value="rock">Rock</option>
+              <option value="jazz">Jazz</option>
+              <option value="clasica">Clásica</option>
+              <option value="folclore">Folclore</option>
+              <option value="tango">Tango</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="event-description">Descripción:</label>
+            <textarea id="event-description" rows="4"></textarea>
+          </div>
+          <button type="submit" class="btn-primary">Crear Evento</button>
+        </form>
+      </div>
     </div>
 
     <!-- Modal Trámite Enviado -->
     <div id="tramite-success-modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <div class="success-message">
-                <i class="fas fa-check-circle"></i>
-                <h2>Trámite Enviado Correctamente</h2>
-                <p>Tu trámite ha sido enviado exitosamente. Recibirás una respuesta por email en las próximas 48 horas.</p>
-                <button class="btn-primary" onclick="closeModal('tramite-success-modal')">Cerrar</button>
-            </div>
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <div class="success-message">
+          <i class="fas fa-check-circle"></i>
+          <h2>Trámite Enviado Correctamente</h2>
+          <p>
+            Tu trámite ha sido enviado exitosamente. Recibirás una respuesta por
+            email en las próximas 48 horas.
+          </p>
+          <button
+            class="btn-primary"
+            onclick="closeModal('tramite-success-modal')"
+          >
+            Cerrar
+          </button>
         </div>
+      </div>
     </div>
 
     <!-- Añadir modal para editar evento (admin/empresa) -->
     <div id="edit-event-modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Editar Evento</h2>
-            <form id="edit-event-form">
-                <input type="hidden" id="edit-event-id">
-                <div class="form-group">
-                    <label for="edit-event-title">Título del Evento:</label>
-                    <input type="text" id="edit-event-title" required>
-                </div>
-                <div class="form-group">
-                    <label for="edit-event-type">Tipo de Evento:</label>
-                    <select id="edit-event-type" required>
-                        <option value="">Seleccionar tipo</option>
-                        <option value="concierto">Concierto</option>
-                        <option value="reunion">Reunión</option>
-                        <option value="marcha">Marcha</option>
-                        <option value="taller">Taller</taller>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="edit-event-date">Fecha:</label>
-                    <input type="datetime-local" id="edit-event-date" required>
-                </div>
-                <div class="form-group">
-                    <label for="edit-event-location">Ubicación:</label>
-                    <input type="text" id="edit-event-location" required>
-                </div>
-                <div class="form-group">
-                    <label for="edit-event-genre">Género Musical:</label>
-                    <select id="edit-event-genre">
-                        <option value="">Seleccionar género</option>
-                        <option value="rock">Rock</option>
-                        <option value="jazz">Jazz</option>
-                        <option value="clasica">Clásica</option>
-                        <option value="folclore">Folclore</option>
-                        <option value="tango">Tango</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="edit-event-description">Descripción:</label>
-                    <textarea id="edit-event-description" rows="4"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="edit-event-image">Imagen URL:</label>
-                    <input type="text" id="edit-event-image" placeholder="URL de la imagen">
-                </div>
-                <div class="form-group">
-                    <label for="edit-event-active">Estado:</label>
-                    <select id="edit-event-active">
-                        <option value="true">Activo</option>
-                        <option value="false">Inactivo</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn-primary">Guardar Cambios</button>
-            </form>
-        </div>
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Editar Evento</h2>
+        <form id="edit-event-form">
+          <input type="hidden" id="edit-event-id" />
+          <div class="form-group">
+            <label for="edit-event-title">Título del Evento:</label>
+            <input type="text" id="edit-event-title" required />
+          </div>
+          <div class="form-group">
+            <label for="edit-event-type">Tipo de Evento:</label>
+            <select id="edit-event-type" required>
+              <option value="">Seleccionar tipo</option>
+              <option value="concierto">Concierto</option>
+              <option value="reunion">Reunión</option>
+              <option value="marcha">Marcha</option>
+              <option value="taller">Taller</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="edit-event-date">Fecha:</label>
+            <input type="datetime-local" id="edit-event-date" required />
+          </div>
+          <div class="form-group">
+            <label for="edit-event-location">Ubicación:</label>
+            <input type="text" id="edit-event-location" required />
+          </div>
+          <div class="form-group">
+            <label for="edit-event-genre">Género Musical:</label>
+            <select id="edit-event-genre">
+              <option value="">Seleccionar género</option>
+              <option value="rock">Rock</option>
+              <option value="jazz">Jazz</option>
+              <option value="clasica">Clásica</option>
+              <option value="folclore">Folclore</option>
+              <option value="tango">Tango</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="edit-event-description">Descripción:</label>
+            <textarea id="edit-event-description" rows="4"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="edit-event-image">Imagen URL:</label>
+            <input
+              type="text"
+              id="edit-event-image"
+              placeholder="URL de la imagen"
+            />
+          </div>
+          <div class="form-group">
+            <label for="edit-event-active">Estado:</label>
+            <select id="edit-event-active">
+              <option value="true">Activo</option>
+              <option value="false">Inactivo</option>
+            </select>
+          </div>
+          <button type="submit" class="btn-primary">Guardar Cambios</button>
+        </form>
+      </div>
     </div>
 
     <!-- Añadir modal para editar beneficio (admin) -->
     <div id="edit-benefit-modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Editar Beneficio</h2>
-            <form id="edit-benefit-form">
-                <input type="hidden" id="edit-benefit-id">
-                <div class="form-group">
-                    <label for="edit-benefit-title">Título:</label>
-                    <input type="text" id="edit-benefit-title" required>
-                </div>
-                <div class="form-group">
-                    <label for="edit-benefit-company">Empresa:</label>
-                    <input type="text" id="edit-benefit-company" required>
-                </div>
-                <div class="form-group">
-                    <label for="edit-benefit-discount">Descuento:</label>
-                    <input type="text" id="edit-benefit-discount" required>
-                </div>
-                <div class="form-group">
-                    <label for="edit-benefit-description">Descripción:</label>
-                    <textarea id="edit-benefit-description" rows="4" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="edit-benefit-valid">Válido hasta:</label>
-                    <input type="date" id="edit-benefit-valid" required>
-                </div>
-                <div class="form-group">
-                    <label for="edit-benefit-active">Estado:</label>
-                    <select id="edit-benefit-active">
-                        <option value="true">Activo</option>
-                        <option value="false">Inactivo</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn-primary">Guardar Cambios</button>
-            </form>
-        </div>
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Editar Beneficio</h2>
+        <form id="edit-benefit-form">
+          <input type="hidden" id="edit-benefit-id" />
+          <div class="form-group">
+            <label for="edit-benefit-title">Título:</label>
+            <input type="text" id="edit-benefit-title" required />
+          </div>
+          <div class="form-group">
+            <label for="edit-benefit-company">Empresa:</label>
+            <input type="text" id="edit-benefit-company" required />
+          </div>
+          <div class="form-group">
+            <label for="edit-benefit-discount">Descuento:</label>
+            <input type="text" id="edit-benefit-discount" required />
+          </div>
+          <div class="form-group">
+            <label for="edit-benefit-description">Descripción:</label>
+            <textarea
+              id="edit-benefit-description"
+              rows="4"
+              required
+            ></textarea>
+          </div>
+          <div class="form-group">
+            <label for="edit-benefit-valid">Válido hasta:</label>
+            <input type="date" id="edit-benefit-valid" required />
+          </div>
+          <div class="form-group">
+            <label for="edit-benefit-active">Estado:</label>
+            <select id="edit-benefit-active">
+              <option value="true">Activo</option>
+              <option value="false">Inactivo</option>
+            </select>
+          </div>
+          <button type="submit" class="btn-primary">Guardar Cambios</button>
+        </form>
+      </div>
     </div>
 
     <!-- Añadir modal para detalles de evento en calendario -->
     <div id="event-detail-modal" class="modal event-detail-modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2 id="event-detail-title"></h2>
-            <img id="event-detail-image" class="event-image" src="/placeholder.svg" alt="Imagen del evento">
-            <p><strong>Fecha:</strong> <span id="event-detail-date"></span></p>
-            <p><strong>Ubicación:</strong> <span id="event-detail-location"></span></p>
-            <p><strong>Género:</strong> <span id="event-detail-genre"></span></p>
-            <p><strong>Descripción:</strong> <span id="event-detail-description"></span></p>
-            <div id="event-detail-actions" style="margin-top: 1rem;">
-                <!-- Acciones dinámicas según el usuario -->
-            </div>
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 id="event-detail-title"></h2>
+        <img
+          id="event-detail-image"
+          class="event-image"
+          alt="Imagen del evento"
+        />
+        <p><strong>Fecha:</strong> <span id="event-detail-date"></span></p>
+        <p>
+          <strong>Ubicación:</strong> <span id="event-detail-location"></span>
+        </p>
+        <p><strong>Género:</strong> <span id="event-detail-genre"></span></p>
+        <p>
+          <strong>Descripción:</strong>
+          <span id="event-detail-description"></span>
+        </p>
+        <div id="event-detail-actions" style="margin-top: 1rem">
+          <!-- Acciones dinámicas según el usuario -->
         </div>
+      </div>
     </div>
 
-    <script src="script.js"></script>
-</body>
+    <!-- Modal Crear Beneficio -->
+    <div id="create-benefit-modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Crear Nuevo Beneficio</h2>
+        <form id="create-benefit-form">
+          <div class="form-group">
+            <label for="benefit-title">Título del Beneficio:</label>
+            <input type="text" id="benefit-title" required />
+          </div>
+          <div class="form-group">
+            <label for="benefit-company">Empresa:</label>
+            <input type="text" id="benefit-company" required />
+          </div>
+          <div class="form-group">
+            <label for="benefit-discount">Descuento:</label>
+            <input
+              type="text"
+              id="benefit-discount"
+              placeholder="ej: 30%, $500, 2x1"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="benefit-description">Descripción:</label>
+            <textarea
+              id="benefit-description"
+              rows="4"
+              required
+              placeholder="Describe el beneficio y sus condiciones..."
+            ></textarea>
+          </div>
+          <div class="form-group">
+            <label for="benefit-valid">Válido hasta:</label>
+            <input type="date" id="benefit-valid" required />
+          </div>
+          <div class="form-group">
+            <label for="benefit-category">Categoría:</label>
+            <select id="benefit-category" required>
+              <option value="">Seleccionar categoría</option>
+              <option value="instrumentos">Instrumentos</option>
+              <option value="servicios">Servicios</option>
+              <option value="educacion">Educación</option>
+              <option value="equipos">Equipos</option>
+              <option value="entretenimiento">Entretenimiento</option>
+            </select>
+          </div>
+          <button type="submit" class="btn-primary">Crear Beneficio</button>
+        </form>
+      </div>
+    </div>
+  </body>
 </html>
