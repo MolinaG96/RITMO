@@ -1418,7 +1418,7 @@ const additionalStyles = `
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.4); /* Adjust the opacity as needed */
+    background-color: rgba(0, 0, 0, 0.3); /* Adjust the opacity as needed */
     z-index: 1; /* Ensure it's above the background image */
 }
 
