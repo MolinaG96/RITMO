@@ -16,43 +16,58 @@
     <!-- Navbar -->
     <nav class="navbar">
       <div class="nav-container">
-        <!-- Actualizar el logo en la navbar -->
+        <!-- Logo -->
         <div class="nav-logo">
           <i class="fas fa-music logo-icon"></i>
           <span class="logo-text">RITMO</span>
         </div>
-        <ul class="nav-menu">
-          <li class="nav-item">
-            <a href="#" class="nav-link active" data-section="novedades"
-              >Novedades</a
-            >
-          </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link" data-section="eventos">Eventos</a>
-          </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link" data-section="beneficios"
-              >Beneficios</a
-            >
-          </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link" data-section="tramites">Trámites</a>
-          </li>
-          <li class="nav-item hidden" id="perfil-item">
-            <a href="#" class="nav-link" data-section="perfil" id="perfil-link"
-              >Perfil</a
-            >
-          </li>
-          <li class="nav-item hidden" id="estadisticas-item">
-            <a
-              href="#"
-              class="nav-link"
-              data-section="estadisticas"
-              id="estadisticas-link"
-              >Estadísticas</a
-            >
-          </li>
-        </ul>
+
+        <!-- Botón hamburguesa para mobile -->
+        <button class="nav-toggle" id="nav-toggle">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+
+        <!-- Menú de navegación -->
+        <div class="nav-menu-container" id="nav-menu-container">
+          <ul class="nav-menu">
+            <li class="nav-item">
+              <a href="#" class="nav-link active" data-section="novedades"
+                >Novedades</a
+              >
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link" data-section="eventos">Eventos</a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link" data-section="beneficios"
+                >Beneficios</a
+              >
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link" data-section="tramites">Trámites</a>
+            </li>
+            <li class="nav-item hidden" id="perfil-item">
+              <a
+                href="#"
+                class="nav-link"
+                data-section="perfil"
+                id="perfil-link"
+                >Perfil</a
+              >
+            </li>
+            <li class="nav-item hidden" id="estadisticas-item">
+              <a
+                href="#"
+                class="nav-link"
+                data-section="estadisticas"
+                id="estadisticas-link"
+                >Estadísticas</a
+              >
+            </li>
+          </ul>
+        </div>
         <div class="nav-auth">
           <button id="login-btn" class="auth-btn">
             <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
@@ -382,23 +397,21 @@
       <div class="modal-content">
         <span class="close">&times;</span>
         <h2>Iniciar Sesión</h2>
+        <p style="margin-bottom: 1rem; color: #666; font-size: 0.9rem">
+          <strong>Usuarios de prueba:</strong><br />
+          • afiliado@test.com (Afiliado)<br />
+          • admin@test.com (Administrador)<br />
+          • empresa@test.com (Empresa)
+        </p>
         <form id="login-form">
           <div class="form-group">
             <label for="email">Email:</label>
-            <input type="email" id="email" required />
-          </div>
-          <div class="form-group">
-            <label for="password">Contraseña:</label>
-            <input type="password" id="password" required />
-          </div>
-          <div class="form-group">
-            <label for="user-type">Tipo de Usuario:</label>
-            <select id="user-type" required>
-              <option value="">Seleccionar tipo</option>
-              <option value="afiliado">Afiliado</option>
-              <option value="empresa">Empresa</option>
-              <option value="admin">Administrador</option>
-            </select>
+            <input
+              type="email"
+              id="email"
+              required
+              placeholder="Ingresa uno de los emails de prueba"
+            />
           </div>
           <button type="submit" class="btn-primary">Iniciar Sesión</button>
         </form>
@@ -513,7 +526,7 @@
             <label for="edit-event-location">Ubicación:</label>
             <input type="text" id="edit-event-location" required />
           </div>
-          <div class="form-group" id="genre-group">
+          <div class="form-group" id="edit-genre-group">
             <label for="edit-event-genre">Género Musical:</label>
             <select id="edit-event-genre">
               <option value="">Seleccionar género</option>

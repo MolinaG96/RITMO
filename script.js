@@ -384,6 +384,25 @@ function setupEventListeners() {
       e.target.style.display = "none"
     }
   })
+  
+  // Toggle menú mobile
+  document.getElementById("nav-toggle").addEventListener("click", toggleMobileMenu)
+
+  // Cerrar menú al hacer click en un enlace (mobile)
+  document.querySelectorAll(".nav-link").forEach((link) => {
+    link.addEventListener("click", () => {
+      if (window.innerWidth <= 900) {
+        closeMobileMenu()
+      }
+    })
+  })
+
+  // Cerrar menú al hacer click en botones de auth (mobile)
+  document.getElementById("login-btn").addEventListener("click", () => {
+    if (window.innerWidth <= 900) {
+      closeMobileMenu()
+    }
+  })
 }
 
 function showSection(sectionName) {
@@ -431,17 +450,21 @@ function showSection(sectionName) {
 function handleLogin(e) {
   e.preventDefault()
   const email = document.getElementById("email").value
-  const userType = document.getElementById("user-type").value
 
-  // Simulación de login
+  // Simulación de login - buscar usuario por email
   if (mockData.users[email]) {
     currentUser = mockData.users[email]
     localStorage.setItem("currentUser", JSON.stringify(currentUser))
     updateUIForLoggedUser()
     document.getElementById("login-modal").style.display = "none"
     document.getElementById("login-form").reset()
+    
+    // Mostrar mensaje de bienvenida con el tipo de usuario
+    const userTypeText = currentUser.type === "afiliado" ? "Afiliado" : 
+                        currentUser.type === "admin" ? "Administrador" : "Empresa"
+    alert(`¡Bienvenido ${currentUser.name}! Has iniciado sesión como ${userTypeText}`)
   } else {
-    alert("Usuario no encontrado")
+    alert("Usuario no encontrado. Emails válidos:\n- afiliado@test.com\n- admin@test.com\n- empresa@test.com")
   }
 }
 
@@ -1034,8 +1057,15 @@ function handleCreateEvent(e) {
 
 // Función para abrir el modal de edición de evento
 function openEditEventModal(eventId) {
+  console.log("openEditEventModal called with eventId:", eventId)
+  
   const event = mockData.events.find((e) => e.id === eventId)
-  if (!event) return
+  if (!event) {
+    console.log("Event not found with id:", eventId)
+    return
+  }
+  
+  console.log("Event found:", event)
 
   document.getElementById("edit-event-id").value = event.id
   document.getElementById("edit-event-title").value = event.title
@@ -1055,6 +1085,7 @@ function openEditEventModal(eventId) {
     editGenreGroup.style.display = "none"
   }
 
+  console.log("About to show modal")
   document.getElementById("edit-event-modal").style.display = "block"
 }
 
@@ -1784,6 +1815,38 @@ function handleCreateBenefit(e) {
   alert("Beneficio creado exitosamente")
 }
 
+// Funciones para menú mobile
+function toggleMobileMenu() {
+  const navToggle = document.getElementById("nav-toggle")
+  const navMenuContainer = document.getElementById("nav-menu-container")
+
+  navToggle.classList.toggle("active")
+  navMenuContainer.classList.toggle("active")
+
+  // Prevenir scroll del body cuando el menú está abierto
+  if (navMenuContainer.classList.contains("active")) {
+    document.body.style.overflow = "hidden"
+  } else {
+    document.body.style.overflow = "auto"
+  }
+}
+
+function closeMobileMenu() {
+  const navToggle = document.getElementById("nav-toggle")
+  const navMenuContainer = document.getElementById("nav-menu-container")
+
+  navToggle.classList.remove("active")
+  navMenuContainer.classList.remove("active")
+  document.body.style.overflow = "auto"
+}
+
+// Cerrar menú mobile al redimensionar ventana
+window.addEventListener("resize", () => {
+  if (window.innerWidth > 900) {
+    closeMobileMenu()
+  }
+})
+
 // Agregar estilos CSS adicionales
 const additionalStyles = `
 .badge {
@@ -1950,3 +2013,25 @@ const additionalStyles = `
 const styleSheet = document.createElement("style")
 styleSheet.textContent = additionalStyles
 document.head.appendChild(styleSheet)
+
+document.getElementById("create-event-form").addEventListener("submit", handleCreateEvent)
+  
+  // Mostrar/ocultar campo de género según el tipo de evento (crear evento)
+  document.getElementById("event-type").addEventListener("change", function() {
+    const genreGroup = document.getElementById("genre-group")
+    if (this.value === "concierto") {
+      genreGroup.style.display = "block"
+    } else {
+      genreGroup.style.display = "none"
+    }
+  })
+  
+  // Mostrar/ocultar campo de género según el tipo de evento (editar evento)
+  document.getElementById("edit-event-type").addEventListener("change", function() {
+    const editGenreGroup = document.getElementById("edit-genre-group")
+    if (this.value === "concierto") {
+      editGenreGroup.style.display = "block"
+    } else {
+      editGenreGroup.style.display = "none"
+    }
+  })
