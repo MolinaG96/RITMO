@@ -403,6 +403,36 @@ function setupEventListeners() {
       closeMobileMenu()
     }
   })
+
+  // Mostrar/ocultar campo de género según el tipo de evento (crear evento)
+  const eventTypeSelect = document.getElementById("event-type")
+  if (eventTypeSelect) {
+    eventTypeSelect.addEventListener("change", function() {
+      const genreGroup = document.getElementById("genre-group")
+      if (genreGroup) {
+        if (this.value === "concierto") {
+          genreGroup.style.display = "block"
+        } else {
+          genreGroup.style.display = "none"
+        }
+      }
+    })
+  }
+  
+  // Mostrar/ocultar campo de género según el tipo de evento (editar evento)
+  const editEventTypeSelect = document.getElementById("edit-event-type")
+  if (editEventTypeSelect) {
+    editEventTypeSelect.addEventListener("change", function() {
+      const editGenreGroup = document.getElementById("edit-genre-group")
+      if (editGenreGroup) {
+        if (this.value === "concierto") {
+          editGenreGroup.style.display = "block"
+        } else {
+          editGenreGroup.style.display = "none"
+        }
+      }
+    })
+  }
 }
 
 function showSection(sectionName) {
@@ -1057,16 +1087,12 @@ function handleCreateEvent(e) {
 
 // Función para abrir el modal de edición de evento
 function openEditEventModal(eventId) {
-  console.log("openEditEventModal called with eventId:", eventId)
   
   const event = mockData.events.find((e) => e.id === eventId)
   if (!event) {
-    console.log("Event not found with id:", eventId)
     return
   }
   
-  console.log("Event found:", event)
-
   document.getElementById("edit-event-id").value = event.id
   document.getElementById("edit-event-title").value = event.title
   document.getElementById("edit-event-type").value = event.type
@@ -1085,7 +1111,6 @@ function openEditEventModal(eventId) {
     editGenreGroup.style.display = "none"
   }
 
-  console.log("About to show modal")
   document.getElementById("edit-event-modal").style.display = "block"
 }
 
@@ -1820,14 +1845,18 @@ function toggleMobileMenu() {
   const navToggle = document.getElementById("nav-toggle")
   const navMenuContainer = document.getElementById("nav-menu-container")
 
-  navToggle.classList.toggle("active")
-  navMenuContainer.classList.toggle("active")
+  if (navToggle) {
+    navToggle.classList.toggle("active")
+  }
+  if (navMenuContainer) {
+    navMenuContainer.classList.toggle("active")
 
-  // Prevenir scroll del body cuando el menú está abierto
-  if (navMenuContainer.classList.contains("active")) {
-    document.body.style.overflow = "hidden"
-  } else {
-    document.body.style.overflow = "auto"
+    // Prevenir scroll del body cuando el menú está abierto
+    if (navMenuContainer.classList.contains("active")) {
+      document.body.style.overflow = "hidden"
+    } else {
+      document.body.style.overflow = "auto"
+    }
   }
 }
 
@@ -1835,8 +1864,12 @@ function closeMobileMenu() {
   const navToggle = document.getElementById("nav-toggle")
   const navMenuContainer = document.getElementById("nav-menu-container")
 
-  navToggle.classList.remove("active")
-  navMenuContainer.classList.remove("active")
+  if (navToggle) {
+    navToggle.classList.remove("active")
+  }
+  if (navMenuContainer) {
+    navMenuContainer.classList.remove("active")
+  }
   document.body.style.overflow = "auto"
 }
 
@@ -1919,7 +1952,7 @@ const additionalStyles = `
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.3;
+  opacity: 0.6;
   z-index: 0;
 }
 
@@ -2013,25 +2046,3 @@ const additionalStyles = `
 const styleSheet = document.createElement("style")
 styleSheet.textContent = additionalStyles
 document.head.appendChild(styleSheet)
-
-document.getElementById("create-event-form").addEventListener("submit", handleCreateEvent)
-  
-  // Mostrar/ocultar campo de género según el tipo de evento (crear evento)
-  document.getElementById("event-type").addEventListener("change", function() {
-    const genreGroup = document.getElementById("genre-group")
-    if (this.value === "concierto") {
-      genreGroup.style.display = "block"
-    } else {
-      genreGroup.style.display = "none"
-    }
-  })
-  
-  // Mostrar/ocultar campo de género según el tipo de evento (editar evento)
-  document.getElementById("edit-event-type").addEventListener("change", function() {
-    const editGenreGroup = document.getElementById("edit-genre-group")
-    if (this.value === "concierto") {
-      editGenreGroup.style.display = "block"
-    } else {
-      editGenreGroup.style.display = "none"
-    }
-  })
