@@ -1002,11 +1002,18 @@ function loadEvents() {
 function toggleFavorite(eventId) {
   if (!currentUser || currentUser.type !== "afiliado") return
 
+  const event = mockData.events.find((e) => e.id === eventId)
+  if (!event) return
+
   const index = currentUser.favoriteEvents.indexOf(eventId)
   if (index > -1) {
+    // Quitar de favoritos
     currentUser.favoriteEvents.splice(index, 1)
+    event.favorites = Math.max(0, event.favorites - 1)
   } else {
+    // Agregar a favoritos
     currentUser.favoriteEvents.push(eventId)
+    event.favorites += 1
   }
 
   localStorage.setItem("currentUser", JSON.stringify(currentUser))
@@ -1024,11 +1031,18 @@ function toggleFavorite(eventId) {
 function toggleAttendance(eventId) {
   if (!currentUser || currentUser.type !== "afiliado") return
 
+  const event = mockData.events.find((e) => e.id === eventId)
+  if (!event) return
+
   const index = currentUser.attendingEvents.indexOf(eventId)
   if (index > -1) {
+    // Quitar asistencia
     currentUser.attendingEvents.splice(index, 1)
+    event.attendees = Math.max(0, event.attendees - 1)
   } else {
+    // Agregar asistencia
     currentUser.attendingEvents.push(eventId)
+    event.attendees += 1
   }
 
   localStorage.setItem("currentUser", JSON.stringify(currentUser))
