@@ -497,6 +497,23 @@
       </div>
     </div>
 
+    <!-- Modal de Éxito General -->
+    <div id="success-modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <div class="success-message">
+          <i class="fas fa-check-circle"></i>
+          <h2 id="success-title">Operación Exitosa</h2>
+          <p id="success-message">
+            La operación se ha completado exitosamente.
+          </p>
+          <button class="btn-primary" onclick="closeModal('success-modal')">
+            Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- Añadir modal para editar evento (admin/empresa) -->
     <div id="edit-event-modal" class="modal">
       <div class="modal-content">

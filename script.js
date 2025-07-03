@@ -35,7 +35,7 @@ const mockData = {
 
   // Imágenes por género
   genreImages: {
-    rock: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1GMNYbY19i8wfENiGt6brnICTDjz5Rllhjw&s",
+    rock: "https://imagenes.eleconomista.com.mx/files/image_768_768/uploads/2020/03/17/66e83d492adc5.jpeg",
     jazz: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtJKotPo05RIknT-cU771K2gwXh_j-Nu4CwQ&s",
     clasica: "https://musicaclasica.com.ar/wp-content/uploads/92213804_212123373455654_8855503586826649600_n.jpg",
     folclore: "https://www.el1digital.com.ar/wp-content/uploads/2024/08/folclore-2.webp",
@@ -56,7 +56,7 @@ const mockData = {
       location: "Buenos Aires",
       genre: "rock",
       description: "Gran concierto con las mejores bandas de rock nacional.",
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1GMNYbY19i8wfENiGt6brnICTDjz5Rllhjw&s",
+      image: "https://imagenes.eleconomista.com.mx/files/image_768_768/uploads/2020/03/17/66e83d492adc5.jpeg",
     },
     {
       id: 2,
@@ -124,7 +124,7 @@ const mockData = {
       description: "Gran concierto con las mejores bandas de rock nacional.",
       attendees: 150,
       favorites: 45,
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1GMNYbY19i8wfENiGt6brnICTDjz5Rllhjw&s",
+      image: "https://imagenes.eleconomista.com.mx/files/image_768_768/uploads/2020/03/17/66e83d492adc5.jpeg",
       active: true,
       creator: "empresa@test.com",
     },
@@ -492,7 +492,10 @@ function handleLogin(e) {
     // Mostrar mensaje de bienvenida con el tipo de usuario
     const userTypeText = currentUser.type === "afiliado" ? "Afiliado" : 
                         currentUser.type === "admin" ? "Administrador" : "Empresa"
-    alert(`¡Bienvenido ${currentUser.name}! Has iniciado sesión como ${userTypeText}`)
+    showSuccessModal(
+      "¡Bienvenido!",
+      `Hola ${currentUser.name}, has iniciado sesión como ${userTypeText}`
+    )
   } else {
     alert("Usuario no encontrado. Emails válidos:\n- afiliado@test.com\n- admin@test.com\n- empresa@test.com")
   }
@@ -597,17 +600,26 @@ function updateUIForLoggedUser() {
 function updateTramitesOptions() {
   const tramiteTipo = document.getElementById("tramite-tipo")
   const loggedOnlyOptions = document.querySelectorAll(".logged-only")
+  const afiliacionOption = document.querySelector('option[value="afiliacion"]')
 
   if (!currentUser) {
     // Si no hay usuario logueado, ocultar todas las opciones excepto afiliación
     loggedOnlyOptions.forEach((option) => {
       option.style.display = "none"
     })
+    // Mostrar opción de afiliación para usuarios no logueados
+    if (afiliacionOption) {
+      afiliacionOption.style.display = "block"
+    }
   } else {
-    // Si hay usuario logueado, mostrar todas las opciones
+    // Si hay usuario logueado, mostrar todas las opciones excepto afiliación
     loggedOnlyOptions.forEach((option) => {
       option.style.display = "block"
     })
+    // Ocultar opción de afiliación para usuarios logueados
+    if (afiliacionOption) {
+      afiliacionOption.style.display = "none"
+    }
   }
 }
 
@@ -1082,7 +1094,10 @@ function handleCreateEvent(e) {
     loadNovedades()
   }
 
-  alert("Evento creado exitosamente")
+  showSuccessModal(
+    "Evento Creado",
+    "El evento ha sido creado exitosamente y aparecerá en la lista de eventos y novedades."
+  )
 }
 
 // Función para abrir el modal de edición de evento
@@ -1167,7 +1182,10 @@ function handleEditEvent(e) {
     loadNovedades()
   }
 
-  alert("Evento actualizado exitosamente")
+  showSuccessModal(
+    "Evento Actualizado",
+    "Los cambios del evento han sido guardados exitosamente."
+  )
 }
 
 // Función para cambiar el estado de un evento (activo/inactivo)
@@ -1196,7 +1214,10 @@ function toggleEventStatus(eventId) {
   // Cerrar modal si está abierto
   document.getElementById("event-detail-modal").style.display = "none"
 
-  alert(`Evento ${event.active ? "activado" : "desactivado"} exitosamente`)
+  showSuccessModal(
+    "Estado del Evento Actualizado",
+    `El evento ha sido ${event.active ? "activado" : "desactivado"} exitosamente.`
+  )
 }
 
 function loadBenefits() {
@@ -1305,7 +1326,10 @@ function handleEditBenefit(e) {
     loadNovedades()
   }
 
-  alert("Beneficio actualizado exitosamente")
+  showSuccessModal(
+    "Beneficio Actualizado",
+    "Los cambios del beneficio han sido guardados exitosamente."
+  )
 }
 
 // Función para cambiar el estado de un beneficio (activo/inactivo)
@@ -1330,7 +1354,10 @@ function toggleBenefitStatus(benefitId) {
     loadNovedades()
   }
 
-  alert(`Beneficio ${benefit.active ? "activado" : "desactivado"} exitosamente`)
+  showSuccessModal(
+    "Estado del Beneficio Actualizado",
+    `El beneficio ha sido ${benefit.active ? "activado" : "desactivado"} exitosamente.`
+  )
 }
 
 function requestBenefit(benefitId) {
@@ -1339,7 +1366,10 @@ function requestBenefit(benefitId) {
     return
   }
 
-  alert("Cupón solicitado exitosamente. Recibirás el código por email.")
+  showSuccessModal(
+    "Cupón Solicitado",
+    "El cupón ha sido solicitado exitosamente. Recibirás el código por email."
+  )
 
   // Agregar a beneficios utilizados
   if (!currentUser.usedBenefits.includes(benefitId)) {
@@ -1431,6 +1461,14 @@ function formatDateTime(dateString) {
   return date.toLocaleString("es-AR")
 }
 
+// Función para mostrar modal de éxito
+function showSuccessModal(title, message) {
+  document.getElementById("success-title").textContent = title
+  document.getElementById("success-message").textContent = message
+  document.getElementById("success-modal").style.display = "block"
+}
+
+// Función para cerrar modal
 function closeModal(modalId) {
   document.getElementById(modalId).style.display = "none"
 }
@@ -1837,7 +1875,10 @@ function handleCreateBenefit(e) {
     loadNovedades()
   }
 
-  alert("Beneficio creado exitosamente")
+  showSuccessModal(
+    "Beneficio Creado",
+    "El beneficio ha sido creado exitosamente y aparecerá en la lista de beneficios y novedades."
+  )
 }
 
 // Funciones para menú mobile
