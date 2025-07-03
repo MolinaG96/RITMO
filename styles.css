@@ -31,7 +31,7 @@ body {
   position: relative;
 }
 
-/* Mejorar logo */
+/* Mejorar logo con efectos musicales */
 .nav-logo {
   display: flex;
   align-items: center;
@@ -43,6 +43,104 @@ body {
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   z-index: 1001;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Efecto de onda sutil de fondo */
+.nav-logo::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  animation: subtle-wave 4s ease-in-out infinite;
+  z-index: -1;
+}
+
+/* Animación de onda sutil */
+@keyframes subtle-wave {
+  0% {
+    left: -100%;
+  }
+  50% {
+    left: 100%;
+  }
+  100% {
+    left: -100%;
+  }
+}
+
+/* Efecto de pulso sutil en el borde */
+.nav-logo::after {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #667eea, #764ba2, #667eea);
+  border-radius: 10px;
+  z-index: -2;
+  opacity: 0.3;
+  animation: pulse-border 3s ease-in-out infinite;
+}
+
+@keyframes pulse-border {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.02);
+  }
+}
+
+/* Hover effects profesionales */
+.nav-logo:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.nav-logo:hover::before {
+  animation: fast-wave 0.8s ease-in-out infinite;
+}
+
+.nav-logo:hover::after {
+  animation: intense-pulse 1s ease-in-out infinite;
+}
+
+@keyframes fast-wave {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+@keyframes intense-pulse {
+  0%,
+  100% {
+    opacity: 0.8;
+    transform: scale(1.02);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
 }
 
 .logo-text {
@@ -52,6 +150,36 @@ body {
   -webkit-text-fill-color: transparent;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   letter-spacing: 1px;
+  transition: all 0.3s ease;
+  animation: subtle-glow 2s ease-in-out infinite alternate;
+}
+
+/* Efecto de brillo sutil en el texto */
+@keyframes subtle-glow {
+  0% {
+    filter: brightness(1);
+  }
+  100% {
+    filter: brightness(1.1);
+  }
+}
+
+/* Hover effect para el texto */
+.nav-logo:hover .logo-text {
+  background: linear-gradient(135deg, #fff 0%, #f0f0f0 50%, #fff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: text-shimmer 0.8s ease-in-out infinite;
+  letter-spacing: 2px;
+}
+
+@keyframes text-shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
 }
 
 .logo-icon {
@@ -59,6 +187,84 @@ body {
   font-size: 2.2rem;
   color: #fff;
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  transition: all 0.3s ease;
+  animation: music-bounce 2s ease-in-out infinite;
+}
+
+/* Animación sutil de rebote musical */
+@keyframes music-bounce {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-2px) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(0) rotate(0deg);
+  }
+  75% {
+    transform: translateY(-1px) rotate(1deg);
+  }
+}
+
+/* Hover effects para el icono */
+.nav-logo:hover .logo-icon {
+  animation: music-spin 1s ease-in-out infinite;
+  color: #fff;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.8),
+    0 0 30px rgba(102, 126, 234, 0.6);
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}
+
+@keyframes music-spin {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  25% {
+    transform: rotate(-10deg) scale(1.1);
+  }
+  50% {
+    transform: rotate(0deg) scale(1.2);
+  }
+  75% {
+    transform: rotate(10deg) scale(1.1);
+  }
+  100% {
+    transform: rotate(0deg) scale(1);
+  }
+}
+
+/* Efecto de partículas musicales en hover */
+.nav-logo:hover {
+  position: relative;
+}
+
+.nav-logo:hover::before {
+  content: "♪ ♫ ♪ ♫";
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.8rem;
+  animation: musical-notes 2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes musical-notes {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(0px);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-10px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
+  }
 }
 
 /* Botón hamburguesa */
